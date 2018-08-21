@@ -1,0 +1,8 @@
+{
+    "base":{
+        "bin":".bin/",
+        "dist":"dist/",
+        "src":"src/",
+        "libs":"dist/libs/"
+    }
+}
