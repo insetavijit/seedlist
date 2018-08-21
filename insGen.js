@@ -32,7 +32,7 @@ class insGen {
         this.tarGets = ['false_tarGet'];
         this.currenTarGet = "";
 
-        this.funParaMiter = ['false_param']
+        this.funParaMiter={};
         this.currentParamiter = "" ;
 
         this.tst = [];
@@ -118,10 +118,15 @@ class insGen {
         return this.doNextStep();
     }
     update() {
-        this.actions.push("update_vl_json");
+        // this.actions.push("update_vl_json");
+        
+        this.tarGets = [
+            'package' , //this is not a duplicate entry
+        ];
 
         this.actions.push("update_dependency_packages_json");
-        // (this.tarGets.length > 0 && this.tarGets [0] !== 'false' ) ? true : this.tarGets.push("vl.json" , 'package.json') ;
+
+        this.funParaMiter['package'] = ['devDependencies' , 'Dependencies']
 
         return this.doNextStep();
     }
@@ -178,18 +183,19 @@ class insGen {
     update_dependency_packages_json(){
         var
             updates,
+            param = this.funParaMiter[this.currenTarGet],
+            // currParma = "Dependencies",
             storage = {}, // empty storage object : used to store all json file data in a single var
             i = 0 // determiner for loop end
         ;
+        
         try {
-
             storage = require("./package.json")
-
         } catch (error) {
             storage = {}
         }
         // we are looking for every file with the extention of ( "**.vl.json") inside tools/DBSET/ dir
-        glob("tools/DBSET/**.pkg.json", (err, match) => {
+        glob("tools/DBSET/**.package.json", (err, match) => {
             
             // inCase of error ( just distroy the process )
             if(err){ this.doNextStep(false); } //signal to stop entire Process
@@ -207,14 +213,20 @@ class insGen {
                     // storage = Object.assign(storage, d.devDependencies)
 
                     //--//uodate the storage ( ? || part) -------
-
-                        Object.assign(
-                            storage[ "devDependencies" ],
-                            (0 >= this.currentParamiter || typeof (d [ this.currentParamiter ] ) !== 'string')
-                            ? {} : d [currentParamiter]
-                        );
-
-                    // storage =  Object.assign(storage, updates);
+                        
+                        param.forEach(currParma => {
+                            if(!storage[ currParma ]){
+                                storage[ currParma ] = {};
+                            }
+                            Object.assign(
+                                storage[ currParma ],
+    
+                                (typeof (d [ currParma ] ) === 'undefined' )
+                                ? {} : d [currParma]
+                                // d ['devDependencies']
+                            );
+                        });
+                        
                     //-------
 
 
