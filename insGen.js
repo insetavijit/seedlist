@@ -81,7 +81,7 @@ class insGen {
 
         if (_continue === false ||  this.runIndex >= this.actions.length || typeof(CurrentActName) === 'undefined' ) {
 
-            console.log("tarMinating - program ( END )")
+            // console.log("tarMinating - program ( END )")
             
             this.showOutput();
             
@@ -121,89 +121,42 @@ class insGen {
         // this.actions.push("update_vl_json");
         
         this.tarGets = [
+            'vl',
             'package' , //this is not a duplicate entry
         ];
 
-        this.actions.push("update_dependency_packages_json");
+        this.actions.push("updateJSON");
 
         this.funParaMiter['package'] = ['devDependencies' , 'Dependencies']
 
         return this.doNextStep();
     }
-    update_vl_json() {
-        
-        // console.log(this.currenTarGet)
-
-        // this.doNextStep();
-
-        var
-            storage = {}, // empty storage object : used to store all json file data in a single var
-            i = 0 // determiner for loop end
-        ;
-        try {
-
-            storage = require("./vl.json")
-
-        } catch (error) {
-            storage = {}
-        }
-        // we are looking for every file with the extention of ( "**.vl.json") inside tools/DBSET/ dir
-        glob("tools/DBSET/**.vl.json", (err, match) => {
-            
-            // inCase of error ( just distroy the process )
-            if(err){ this.doNextStep(false); } //signal to stop entire Process
-
-            match.forEach(filePath => {
-                // if any math found just read it
-                fs.readFile(path.join(__dirname, filePath), (err, content) => {
-
-                    // inCase of error ( just distroy the process )
-                    if(err){ this.doNextStep(false); } //signal to stop entire Process
-
-                    //if Sucess then start working
-                    var d = JSON.parse(content);
-                    // now add new json file content to our[ storage]
-                    storage = Object.assign(storage, d)
-                    // also incrise our loop end indentifier ( so we can move to the conclution )
-                    i++;
-                    // wright the Genarated Json FIle to vl.json
-                    // wright to the file only happens if no error found during the entire oparation
-                    if (i >= match.length) {
-                        // pass data to wright to vl.json ( filePathIdentification - file )
-                        fs.writeFileSync(path.join(__dirname, "./vl.json"), JSON.stringify(storage));
-                        // now distroy the storage var
-                        storage = 0;
-                        // Pass Sucess Signal to Go for next Step
-                        this.doNextStep();
-                    }
-                });
-            });
-        });
-    }
-    update_dependency_packages_json(){
+    
+    updateJSON(){
         var
             updates,
-            param = this.funParaMiter[this.currenTarGet],
+            param = (this.funParaMiter[this.currenTarGet]) ? this.funParaMiter[this.currenTarGet] : false ,
             // currParma = "Dependencies",
+            tarGetFileToWrite = this.currenTarGet,
             storage = {}, // empty storage object : used to store all json file data in a single var
             i = 0 // determiner for loop end
         ;
         
         try {
-            storage = require("./package.json")
+            storage = require("./"+tarGetFileToWrite+".json")
         } catch (error) {
             storage = {}
         }
         // we are looking for every file with the extention of ( "**.vl.json") inside tools/DBSET/ dir
-        glob("tools/DBSET/**.package.json", (err, match) => {
-            
+        glob("tools/DBSET/**."+tarGetFileToWrite+".json", (err, match) => {
+            console.log(tarGetFileToWrite)
             // inCase of error ( just distroy the process )
             if(err){ this.doNextStep(false); } //signal to stop entire Process
-
+            ;
             match.forEach(filePath => {
                 // if any math found just read it
                 fs.readFile(path.join(__dirname, filePath), (err, content) => {
-
+                    
                     // inCase of error ( just distroy the process )
                     if(err){ this.doNextStep(false); } //signal to stop entire Process
 
@@ -213,7 +166,9 @@ class insGen {
                     // storage = Object.assign(storage, d.devDependencies)
 
                     //--//uodate the storage ( ? || part) -------
-                        
+                        if(!param){
+                            storage = Object.assign(storage, d)
+                        }else{
                         param.forEach(currParma => {
                             if(!storage[ currParma ]){
                                 storage[ currParma ] = {};
@@ -225,10 +180,9 @@ class insGen {
                                 ? {} : d [currParma]
                                 // d ['devDependencies']
                             );
-                        });
+                        });}
                         
                     //-------
-
 
                     // also incrise our loop end indentifier ( so we can move to the conclution )
                     i++;
@@ -236,9 +190,12 @@ class insGen {
                     // wright to the file only happens if no error found during the entire oparation
                     if (i >= match.length) {
                         // pass data to wright to vl.json ( filePathIdentification - file )
-                        // fs.writeFileSync(path.join(__dirname, "./package.json"), JSON.stringify(storage));
+                        fs.writeFileSync(path.join(__dirname, "./"+tarGetFileToWrite+".json"), JSON.stringify(storage));
                         // console.log(updates);
-                        console.log(storage);
+                        // console.log("fileCreate : url : " , path.join(__dirname  ,tarGetFileToWrite+".json"))
+                        // console.log(storage);
+                        // ;
+
                         // now distroy the storage var
                         storage = 0;
                         // Pass Sucess Signal to Go for next Step

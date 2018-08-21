@@ -1,8 +1,5 @@
 {
     "devDependencies": {
         "hola":"vola"
-    },
-    "Dependencies": {
-        "hola":"gola"
     }
 }
