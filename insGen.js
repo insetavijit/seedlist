@@ -11,15 +11,26 @@ class insGen {
         this.currenTarGet = "";
 
         //lists :
+        this.errorNumberId =[
+            'undefined',
+            'invalid',
+            'validation error'
+            
+        ]
         this.errorLog ={
             "error" : []
         }
         this.process = {
             "filters":['filterParams'],
             "runned":[],
-            "error": false,
             "tarGets":['false_tarGet'],
             "continue":true, // run the next step
+        }
+        this.tarmination = {
+            "sucess":false,
+            "tarminated":false,
+            "reason":"",
+            "invalid":false
         }
         this.index = {
             "runProcesSerial": -1 , //df
@@ -80,13 +91,19 @@ class insGen {
 
                 });
         } else {
-            // if a filter is undefined : stop exicution ( this is the end part)
-            this.index.runProcesSerial += 10000000; 
-            this.process.error = true ;
-
-            return (!this.process.continue) ?
-                this.errorLog['error'].push([CurrentFilterName, 'undefined action']) :
-                this.errorLog['error'].push([CurrentFilterName, 'filter Not Found : stoping the exicution']);
+            // console.log(CurrentFilterName)
+            // console.log(typeof (this[CurrentFilterName]) === 'function')
+            if(!this.process.continue){
+                this.tarmination.tarminated = true ;
+            }else if(typeof (this[CurrentFilterName]) !== 'function'){
+                this.tarmination.tarminated = true
+                this.tarmination.invalid = true
+                this.tarmination.reason = "undefined - filter"
+                this.error(CurrentFilterName , 0 , true , true )
+            }else{
+                this.tarmination.sucess = true 
+                this.tarmination.reason = "sucess"
+            }
         }
 
     }
@@ -123,6 +140,22 @@ class insGen {
 
         }
         this.doNextStep();
+    }
+    error(hint , errorNumberId , StopExicution = false , silent=false ){
+
+        // 2018-08-22 23:37:16
+        var errorMsg = [hint , errorNumberId , this.errorNumberId[errorNumberId]];
+
+        console.log(errorMsg)
+
+        this.errorLog.error.push([hint , errorNumberId , this.errorNumberId[errorNumberId]])    
+
+        if(silent){
+            //JUST DO NOTHING !!
+        }else{
+            // GO AND DO NEXT STEP ( MAY STOP EXICUTION )
+            return this.doNextStep(StopExicution);
+        }
     }
 }
 

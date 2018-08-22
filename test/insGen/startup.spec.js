@@ -8,7 +8,7 @@ var
 describe('structure : insGen ', ()=> {
   describe(' insGen testing Global Variables ', ()=> {
     it('it should return the name of the function', ()=> {
-      var insGenResponce = new insGen("--dev");
+      var insGenResponce = new insGen("");
       expect(insGenResponce.name).to.equal('insGen');
     });
   });
@@ -31,15 +31,22 @@ describe('structure : insGen ', ()=> {
   //error testing
   describe('insGen: Error testing', () => {
 
-    it('invalid filter Must return an error:', () => {
+    it('invalid filter Must Be Tarminated:', () => {
       var insGenResponce = new insGen("vl --invalidFilter");
 
-      // console.log(insGenResponce)
-
-      expect(insGenResponce.process.error).to.true;
+      expect(insGenResponce.tarmination.sucess).to.false;
+      expect(insGenResponce.tarmination.tarminated).to.true;
+      expect(insGenResponce.tarmination.invalid).to.true;
       // test the invalidFilterName :
-      expect(insGenResponce.errorLog.error[0][0]).to.equal("invalidFilter");
     });
-  });
+    it('invalid filter Must Return Error Msg', () => {
+      var insGenResponce = new insGen("vl --invalidFilter");
+      // console.log(insGenResponce.errorLog.error)
+      expect(insGenResponce.errorLog.error[0][0]).to.be.equal('invalidFilter');
+      expect(insGenResponce.errorLog.error[0][1]).to.be.equal(0);
+      expect(insGenResponce.errorLog.error[0][2]).to.be.equal('undefined');
+      // test the invalidFilterName :
+    });
 
+  });
 });
