@@ -4,7 +4,7 @@ var
   expect = require('chai').expect,
 
   insGen = require("../../insGen.js").insGenTest;
-
+//2018-08-22 23:51:31
 describe('structure : insGen ', ()=> {
   describe(' insGen testing Global Variables ', ()=> {
     it('it should return the name of the function', ()=> {
@@ -12,6 +12,7 @@ describe('structure : insGen ', ()=> {
       expect(insGenResponce.name).to.equal('insGen');
     });
   });
+//2018-08-22 23:51:31
 
   describe('insGen: can we get the process list correct ?', ()=> {
     it('insGenResponce.process.filters | <-= (action list)', ()=> {
@@ -27,7 +28,8 @@ describe('structure : insGen ', ()=> {
       expect(insGenResponce.process.tarGets).to.eql(['vl']);
     });
   });
-
+  
+  //2018-08-22 23:51:31
   //error testing
   describe('insGen: Error testing', () => {
 
@@ -47,6 +49,5 @@ describe('structure : insGen ', ()=> {
       expect(insGenResponce.errorLog.error[0][2]).to.be.equal('undefined');
       // test the invalidFilterName :
     });
-
   });
 });

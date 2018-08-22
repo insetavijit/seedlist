@@ -4,7 +4,7 @@
 
 
 class insGen {
-    constructor( args ="" ){
+    constructor( args ="" , log=false){
         this.name = "insGen";
         this.args = args ;
         //tmp vars :
