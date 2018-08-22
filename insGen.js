@@ -9,10 +9,15 @@ class insGen {
         this.args = args ;
         //tmp vars :
         this.currenTarGet = "";
+
+        //lists :
+        this.errorLog ={
+            "error" : []
+        }
         this.process = {
             "filters":['filterParams'],
             "runned":[],
-            "error":[],
+            "error": false,
             "tarGets":['false_tarGet'],
             "continue":true, // run the next step
         }
@@ -36,7 +41,9 @@ class insGen {
                 typeof (CurrentFilterName) === 'undefined'
 
             ){
-
+            // log the error:
+            this.process.error = true ;
+            //show output
             this.showOutput();
             //making sure that we quit process
             this.index.runProcesSerial = 10000;
@@ -73,9 +80,13 @@ class insGen {
 
                 });
         } else {
+            // if a filter is undefined : stop exicution ( this is the end part)
+            this.index.runProcesSerial += 10000000; 
+            this.process.error = true ;
+
             return (!this.process.continue) ?
                 this.errorLog['error'].push([CurrentFilterName, 'undefined action']) :
-                this.errorLog['error'].push([CurrentFilterName, 'error found : stoping the exicution']);
+                this.errorLog['error'].push([CurrentFilterName, 'filter Not Found : stoping the exicution']);
         }
 
     }
@@ -84,9 +95,12 @@ class insGen {
     }
     filterParams(){
         // reset the process list.action
-        this.process.filters = [];
+        //no need CurrentLy : i will see that leater
+        //2018-08-22 23:08:32
+        // this.process.filters.push("serialiZefilterS")
         this.process.tarGets = [];
 
+        // adding next 
         var args = this.args ;
 
         if(typeof ( args) === 'string'){
