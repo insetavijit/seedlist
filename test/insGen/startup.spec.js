@@ -17,7 +17,7 @@ describe('structure : insGen ', ()=> {
   describe('insGen: can we get the process list correct ?', ()=> {
     it('insGenResponce.process.filters | <-= (action list)', ()=> {
 
-      var insGenResponce = new insGen("vl --update");
+      var insGenResponce = new insGen("--update");
 
       expect(insGenResponce.process.filters).to.eql(['filterParams', 'update']);
       //test runned functions

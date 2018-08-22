@@ -9,6 +9,13 @@ class insGen {
         this.args = args ;
         //tmp vars :
         this.currenTarGet = "";
+        //validation
+        this.valid = {
+            'tarGets' : [
+                "vl",
+                'package'
+            ]
+        }
 
         //lists :
         this.errorNumberId =[
@@ -23,6 +30,7 @@ class insGen {
         this.process = {
             "filters":['filterParams'],
             "runned":[],
+            "actual_run":[],
             "tarGets":['false_tarGet'],
             "continue":true, // run the next step
         }
@@ -59,6 +67,9 @@ class insGen {
             //making sure that we quit process
             this.index.runProcesSerial = 10000;
             this.process.continue = false;
+            this.tarmination.tarminated = true
+            this.tarmination.sucess = false
+            this.tarmination.reason = "stop-signal"
 
             return this;
         }
@@ -99,7 +110,7 @@ class insGen {
                 this.tarmination.tarminated = true
                 this.tarmination.invalid = true
                 this.tarmination.reason = "undefined - filter"
-                this.error(CurrentFilterName , 0 , true , true )
+                this.error(CurrentFilterName , 0 , false , true )
             }else{
                 this.tarmination.sucess = true 
                 this.tarmination.reason = "sucess"
@@ -108,15 +119,15 @@ class insGen {
 
     }
     showOutput(){
-        console.log(this);
+        // console.log(this);
     }
     filterParams(){
+        this.indexRun('filterParams');
         // reset the process list.action
         //no need CurrentLy : i will see that leater
         //2018-08-22 23:08:32
         // this.process.filters.push("serialiZefilterS")
         this.process.tarGets = [];
-
         // adding next 
         var args = this.args ;
 
@@ -139,9 +150,61 @@ class insGen {
             });
 
         }
+        
+        if(this.process.tarGets.length >=1){
+            this.process.filters.push('tarGetvalidation');
+        }
+        // end
         this.doNextStep();
     }
-    error(hint , errorNumberId , StopExicution = false , silent=false ){
+    tarGetvalidation(){
+        
+        //esc MultiRun
+        if(this.escMultiRun('tarGetvalidation')){
+            this.doNextStep();
+            return false;
+        }
+        // indexing that we are running it :
+        this.indexRun('tarGetvalidation');
+
+        var tarGets =  this.process.tarGets ;
+
+        //reset tareGets
+        this.process.tarGets = [];
+
+        var storage = [];
+        if (tarGets.length > 1) {
+           
+            for (let i = 0; i < tarGets.length; i++) {
+                var tarGet = false ;
+                const current_tarGet = tarGets[i];
+
+                for (let l = 0; l < this.valid.tarGets.length; l++) {
+                    const validTarGet = this.valid.tarGets[l];
+                    if(current_tarGet === validTarGet ){
+                        // console.log(current_tarGet)
+                        tarGet = true ;
+                        storage.push(current_tarGet);
+                        break ;
+                    }
+                }
+                // if current tarGet is not  valid tarGet
+                // then exit the loop
+                if(!tarGet){
+                    // if tarGet is false means a invalid tarGet is given
+                    this.error('tarGet : ' + current_tarGet , 1 , false )
+                    break ;
+                }
+            }
+
+            if(tarGet){
+                this.process.tarGets = storage ;
+            }
+        }
+        //end
+        this.doNextStep();
+    }
+    error(hint , errorNumberId , continiueProcess = true , silent=false ){
 
         // 2018-08-22 23:37:16
         var errorMsg = [hint , errorNumberId , this.errorNumberId[errorNumberId]];
@@ -154,8 +217,15 @@ class insGen {
             //JUST DO NOTHING !!
         }else{
             // GO AND DO NEXT STEP ( MAY STOP EXICUTION )
-            return this.doNextStep(StopExicution);
+            return this.doNextStep(continiueProcess);
         }
+    }
+    indexRun( name ){
+        this.process.actual_run.push(name)
+    }
+    escMultiRun(filterName){
+        var runned = this.process.runned ;
+        return ( runned [runned.length - 2] === 'tarGetvalidation' ) ? true : false ;
     }
 }
 
