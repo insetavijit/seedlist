@@ -209,7 +209,7 @@ class insGen {
         // 2018-08-22 23:37:16
         var errorMsg = [hint , errorNumberId , this.errorNumberId[errorNumberId]];
 
-        console.log(errorMsg)
+        console.log(errorMsg , "-=> error:msg")
 
         this.errorLog.error.push([hint , errorNumberId , this.errorNumberId[errorNumberId]])    
 
