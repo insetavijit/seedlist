@@ -3,7 +3,7 @@ var
 
   expect = require('chai').expect,
 
-  insGen = require("../../insGen.js").insGenTest;
+  insGen = require("../../tools/SCRIPTS/insGen.js").insGenTest;
 //2018-08-22 23:51:31
 describe('startup:', () => {
 

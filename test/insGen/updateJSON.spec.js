@@ -3,7 +3,7 @@ var
 
     expect = require('chai').expect,
 
-    insGen = require("../../insGen.js").insGenTest,
+    insGen = require("../../tools/SCRIPTS/insGen.js").insGenTest,
 
     helper = require("./../modules/helper.js");
 
