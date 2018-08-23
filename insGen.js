@@ -18,6 +18,7 @@ class insGen {
         }
 
         //lists :
+        this.paramiters = {} ;
         this.console = [];
         this.errorNumberId = [
             'undefined',
@@ -51,6 +52,19 @@ class insGen {
             "filters": [],
         }
         this.temp = [];
+        //Method Spacific Storage:
+
+        var methodBdNames = ['updateJSON_db'];
+        methodBdNames.forEach(methodName => {
+            this[methodName]={
+                "runned":[],
+                "msg":[],
+                "err":[],
+                "log":[],
+                "success":false
+            }
+        });
+
         // run
         this.isDevMode( dev, methodNmae,  param  );
     }
@@ -113,14 +127,15 @@ class insGen {
                 {
                     this.tarmination.sucess = true ;
                 }
-            this.showOutput();
+            return this.showOutput();
         }
 
 
         this.msg([
+            ":: doNextStep > BEFORE RUN ::",
             "-=> run : " + CurrentFilterName,
             " --=?> stat : " + (typeof (this[CurrentFilterName]) === "function"),
-            "[continue ===" + _continue + " ]"
+            "[ continue ===" + _continue + " ]"
         ]);
 
 
@@ -136,8 +151,8 @@ class insGen {
                 this.process.runned.push(CurrentFilterName)
                 // this.console.log(this.process.filters)
                 this.msg([
-                    "  --=o> " + CurrentFilterName,
-                    "exicuting"
+                    ":: doNextStep > run function ::",
+                    "  --=o> " + CurrentFilterName
                 ]);
                 this.index.runProcesSerial++;
                 // this.msg(tarGets)
@@ -165,6 +180,10 @@ class insGen {
         return this;
     }
     filterParams() {
+        if (this.escMultiRun('filterParams' , true )) {
+            // esc : multirun
+            return this.doNextStep();
+        }
         this.indexRun('filterParams');
         // reset the process list.action
         //no need CurrentLy : i will see that leater
@@ -297,12 +316,71 @@ class insGen {
     indexRun(name) {
         this.process.actual_run.push(name)
     }
-    escMultiRun(filterName) {
+    findInArray(array=[] , find="", escPoint = 1){
+        
+        if(typeof (array) === 'object'){
+            if(typeof (find) === 'string'){
+
+                var esc = 0 ;
+
+                for (let i = 0; i < array.length; i++) {
+                    const element = array[i];
+                    if( element === find){
+                        esc++;
+                    }
+                    if(esc >= escPoint){
+                        return true ;
+                    }
+                }
+            }
+        }
+        return false ;
+    }
+    escMultiRun(filterName ="", noRepitAnyWays = false) {
         var runned = this.process.runned;
-        return (runned[runned.length - 2] === 'tarGetvalidation') ? true : false;
+        if(noRepitAnyWays){
+            if(this.findInArray(this.process.runned , filterName , 2)){
+                this.console.pop()
+                return true ;
+            }
+        }
+
+        if(runned[runned.length - 2] === filterName){
+            // last is cruuent | avoind multirun
+            this.console.pop()
+
+            return true ;
+        }
+        return false ;
     }
     update() {
+        if (this.escMultiRun('update' , true)) {
+            // esc : multirun
+            return this.doNextStep();
+        }
+        
+        // // indexing that we are running it :
         this.indexRun("update")
+        console.log(this.process.tarGets);
+        if(this.process.tarGets.length === 0){
+
+            this.process.tarGets = [
+                'vl',
+                'package'
+            ]
+        }
+        this.process.filters.push('updateJSON');
+
+        this.paramiters ['package'] = ['devDependencies', 'Dependencies'];
+
+        this.doNextStep();
+    }
+    updateJSON(){
+        if(this.currenTarGet){
+            this.updateJSON_db.runned.push(this.currenTarGet)
+        }
+        this.process.actual_run.push("updateJSON")
+        
         this.doNextStep();
     }
 }
