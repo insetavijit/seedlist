@@ -17,7 +17,8 @@
 
 # Only for Master branch WE Need to have package.json file
 # else we can genarate it with insGen
-# package.json
+# it will be Created by AutoGen
+package.json
 
 
 package-lock.json
