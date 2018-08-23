@@ -13,10 +13,6 @@ var
 
 describe('tarGetvalidation: ', () => {
 
-
-
-
-
     describe('Start Properly : ', () => {
         // jsut once | 2018-08-22 23:51:21
         it('Must Start the method', () => {
@@ -31,8 +27,6 @@ describe('tarGetvalidation: ', () => {
     });
 
 
-
-
     describe('filter : if given tarGets are valid ', () => {
         // jsut once | 2018-08-22 23:51:21
         it(
@@ -44,13 +38,11 @@ describe('tarGetvalidation: ', () => {
     });
 
 
-
-
     describe('Error Handling : ', () => {
 
         it('Must Return error if any invalid tarGets are given', () => {
             var insGenResponce = new insGen("vl package vls");
-            expect(insGenResponce.errorLog.error[0][1]).to.be.equal(1);
+            expect(insGenResponce.errorLog[0][1]).to.be.equal(1);
             //Process Must End
             expect(insGenResponce.tarmination.sucess).to.false;
             expect(insGenResponce.tarmination.reason).to.be.equal('stop-signal');

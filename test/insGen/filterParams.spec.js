@@ -39,7 +39,7 @@ describe('filterParams: ripitation ', () => {
       // jsut once | 2018-08-22 23:51:21
       var insGenResponce = new insGen("--invalidFilter");
       // console.log( insGenResponce)
-      expect(insGenResponce.errorLog.error[0][1]).to.be.equal(1)
+      expect(insGenResponce.errorLog[0][1]).to.be.equal(1)
     });
   })
 });

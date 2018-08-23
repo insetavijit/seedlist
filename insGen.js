@@ -4,128 +4,151 @@
 
 
 class insGen {
-    constructor( args ="" , log=false){
+    constructor(args = "", log = false) {
         this.name = "insGen";
-        this.args = args ;
+        this.args = args;
         //tmp vars :
         this.currenTarGet = "";
         //validation
         this.valid = {
-            'tarGets' : [
+            'tarGets': [
                 "vl",
                 'package'
             ]
         }
 
         //lists :
-        this.console = [] ;
-        this.errorNumberId =[
+        this.console = [];
+        this.errorNumberId = [
             'undefined',
             'invalid',
             'validation error'
-            
+
         ]
-        this.errorLog ={
-            "error" : []
-        }
+        this.errorLog = []
+
         this.process = {
-            "filters":['filterParams'],
-            "runned":[],
-            "actual_run":[],
-            "tarGets":['false_tarGet'],
-            "continue":true, // run the next step
+            "filters": ['filterParams'],
+            "runned": [],
+            "actual_run": [],
+            "tarGets": ['false_tarGet'],
+            "continue": true, // run the next step
         }
         this.tarmination = {
-            "sucess":false,
-            "tarminated":false,
-            "reason":"",
-            "invalid":false
+            "sucess": false,
+            "tarminated": false,
+            "reason": "",
+            "invalid": false
         }
         this.index = {
-            "runProcesSerial": -1 , //df
-        } 
+            "runProcesSerial": -1, //df
+        }
         this.sudoAct = [
             'log'
         ];
         this.inputs = {
-            "tarGets": [] ,
-                "filters": [] ,
+            "tarGets": [],
+            "filters": [],
         }
-        
+
         // run
         this.doNextStep();
     }
-    doNextStep(_continue = true) {
-        var CurrentFilterName = this.process.filters [this.index.runProcesSerial + 1];
-        if
-            (
-                _continue === false || 
-                this.index.runProcesSerial >= this.process.filters.length || 
-                typeof (CurrentFilterName) === 'undefined'
+    arrayfilter(array =[]){
+        var storage = [];
+        for (let i = 0; i < array.length; i++) {
+            const currentIndex = array[i];
+            var process = false ;
 
-            ){
-            // log the error:
-            
-            this.process.error = true ;
-            //show output
+            if(typeof currentIndex !== 'object' ){
+                for (let l = 0; l < storage.length; l++) {
+                    const storedItem = storage[l];
+                    if(currentIndex === storedItem){
+                        process = true ;
+                        break;
+                    }
+                }
+                if(process === false){
+                    storage.push(currentIndex);
+                }
+            }
+        }
+        return storage ;
+    }
+    doNextStep(_continue = true) {
+        //do not end process dircetly :
+        // call error and pass the tarminat signal
+
+        var CurrentFilterName = this.process.filters[this.index.runProcesSerial + 1];
+
+        if (_continue === false) {
+            // stop signal
+
+            // we are just indexing the error: not going to nextStep
+            this.error("doNextStep( _continue = false )", 0, true, true)
+
+            this.tarmination.reason = "stop-signal"
             this.showOutput();
-            //making sure that we quit process
+
             this.index.runProcesSerial = 10000;
             this.process.continue = false;
             this.tarmination.tarminated = true
             this.tarmination.sucess = false
-            this.tarmination.reason = "stop-signal"
+        } else if (typeof (CurrentFilterName) === 'undefined') {
+            // we reached the last point of the exicution 
+            // so jsut doing a validation to confirm the oparation
 
-            return this;
+            var runned = Array ;
         }
 
-        if 
-            ( 
-                typeof (this[CurrentFilterName]) === 'function' &&  // if the filter is exist
-                this.process.continue === true // and also have the signal to process
-            ){
-                this.process.tarGets.forEach(tarGets => {
-                    /**
-                     * for eatch tarGet files we are going to run the filters 
-                     * measn if we have to tarGets (vl.json , package.json)
-                     * then all the filter will be runned for tarGets
-                     * measn we will run all filters twice
-                     * 
-                     * now, its the filter who will decide it needs to run or not
-                     * if not then the filter will pass a signal to process and esc all
-                     * its funtionalitys
-                     * ==================
-                     * 2018-08-22 22:29:36
-                     */
 
-                    this.currenTarGet = tarGets;
-                    this.process.runned.push(CurrentFilterName)
-                    this.index.runProcesSerial++;
+        this.msg([
+            "-=> run : " + CurrentFilterName,
+            " --=?> stat : " + (typeof (this[CurrentFilterName]) === "function"),
+            "[continue ===" + _continue + " ]"
+        ]);
 
-                    // runn the filter :
-                    this[CurrentFilterName]();
 
-                });
+        if (
+            typeof (this[CurrentFilterName]) === 'function' && // if the filter is exist
+            this.process.continue === true // and also have the signal to process
+        ) {
+            // in case no target files are added we will run method 
+            // and the method will deside , if it needs ( ? tarGet paramiter )
+            for (let i = -1; i < this.process.tarGets.length; i++) {
+                const tarGets = (this.process.tarGets[i]) ? this.process.tarGets[i] : false;
+                this.currenTarGet = tarGets;
+                this.process.runned.push(CurrentFilterName)
+                // this.console.log(this.process.filters)
+                this.msg([
+                    "  --=o> " + CurrentFilterName,
+                    "exicuting"
+                ]);
+                this.index.runProcesSerial++;
+                // this.msg(tarGets)
+                // runn the filter :
+                this[CurrentFilterName]();
+            }
         } else {
-            
-            if(!this.process.continue){
-                this.tarmination.tarminated = true ;
-            }else if(typeof (this[CurrentFilterName]) !== 'function'){
+
+            if (!this.process.continue) {
+                this.tarmination.tarminated = true;
+            } else if (typeof (this[CurrentFilterName]) !== 'function') {
                 this.tarmination.tarminated = true
                 this.tarmination.invalid = true
                 this.tarmination.reason = "undefined - filter"
-                this.error("invalid filter - " + CurrentFilterName , 1 , true , true )
-            }else{
-                this.tarmination.sucess = true 
+                this.error("invalid filter - " + CurrentFilterName, 1, true, true)
+            } else {
+                this.tarmination.sucess = true
                 this.tarmination.reason = "sucess"
             }
         }
 
     }
-    showOutput(){
+    showOutput() {
         // console.log(this);
     }
-    filterParams(){
+    filterParams() {
         this.indexRun('filterParams');
         // reset the process list.action
         //no need CurrentLy : i will see that leater
@@ -133,123 +156,137 @@ class insGen {
         // this.process.filters.push("serialiZefilterS")
         this.process.tarGets = [];
         // adding next 
-        var args = this.args ;
+        var args = this.args;
 
 
-        if(typeof ( args) === 'string'){
+        if (typeof (args) === 'string') {
             // saparating cmnds
             var argsList = args.split(" ");
 
             argsList.forEach(paramiter => {
                 // if we have a cmnd with "--" means its a filter
                 var currentParamiter = paramiter.split("--");
+                // this.msg(paramiter.split("--").pop())
 
-                if(currentParamiter.length == 2){
+                if (currentParamiter.length == 2) {
                     // if a filter is found then put it in process.filters
                     this.process.filters.push(currentParamiter.pop());
-                }else if(currentParamiter.length >= 2){
+                } else if (currentParamiter.length >= 2) {
                     // error
-                }else {
+                } else {
                     // add tarGetvalidation to the que
+                    // console.log(currentParamiter)
+
                     this.process.filters.push('tarGetvalidation');
                     // this.record.inputs.tarGets.push(currentParamiter.pop())
+                    // console.log(currentParamiter)
                     // console.log(currentParamiter)
                     this.process.tarGets.push(currentParamiter.pop());
                 }
             });
 
         }
-        
+
         // if(this.process.tarGets.length >=1){
         //     this.process.filters.push('tarGetvalidation');
         // }
         // end
+        // console.log(this.process.filters)
         this.doNextStep();
     }
-    tarGetvalidation(){
-        
+    tarGetvalidation() {
+
         // //esc MultiRun
-        if(this.escMultiRun('tarGetvalidation')){
+        if (this.escMultiRun('tarGetvalidation')) {
             this.doNextStep();
             return false;
         }
         // // indexing that we are running it :
         this.indexRun('tarGetvalidation');
 
-        var tarGets =  this.process.tarGets ;
+        var tarGets = this.process.tarGets;
         this.inputs.tarGets = tarGets;
         //reset tareGets
         this.process.tarGets = [];
 
         var storage = [];
-        this.msg( tarGets)
+        this.msg(tarGets)
         if (tarGets.length > 1) {
-           
+
             for (let i = 0; i < tarGets.length; i++) {
-                var tarGet = false ;
+                var tarGet = false;
                 const current_tarGet = tarGets[i];
-                
-                this.msg(current_tarGet  + ": current tarGet")
+
+                this.msg([current_tarGet + ": current tarGet"])
 
 
                 for (let l = 0; l < this.valid.tarGets.length; l++) {
                     const validTarGet = this.valid.tarGets[l];
-                    if(current_tarGet === validTarGet ){
-                        
-                        tarGet = true ;
+                    if (current_tarGet === validTarGet) {
+
+                        tarGet = true;
                         storage.push(current_tarGet);
-                        break ;
+                        break;
                     }
                 }
                 // if current tarGet is not  valid tarGet
                 // then exit the loop
-                if(!tarGet){
+                if (!tarGet) {
                     // if tarGet is false means a invalid tarGet is given
-                    this.error('tarGet : ' + current_tarGet , 1 , false )
-                    break ;
+                    this.error('tarGet : ' + current_tarGet, 1, false)
+                    break;
                 }
             }
 
-            if(tarGet){
-                this.process.tarGets = storage ;
+            if (tarGet) {
+                this.process.tarGets = storage;
             }
         }
         //end
         this.doNextStep();
     }
-    msg(msg = ""){
-        this.console.push( 
-            // function Runned Last Time
-            this.process.actual_run[this.process.actual_run.length - 1],
-            msg
-        )
+    msg(msg = "") {
+
+        var prepareMsg = ["last :" + this.process.runned[this.process.runned.length - 1]];
+
+        msg.forEach(element => {
+            prepareMsg.push(element);
+        });
+
+        this.console.push(prepareMsg)
     }
-    error(hint , errorNumberId , continiueProcess = true , silent=false ){
+    error(hint, errorNumberId, continiueProcess = true, silent = false) {
 
         // 2018-08-22 23:37:16
-        var errorMsg = [hint , errorNumberId , this.errorNumberId[errorNumberId]];
+        var errorMsg = [hint, errorNumberId, this.errorNumberId[errorNumberId]];
 
-        this.msg(errorMsg  + "-=> error:msg")
+        this.msg([errorMsg + "-=> error:msg"])
 
-        this.errorLog.error.push([hint , errorNumberId , this.errorNumberId[errorNumberId]])    
+        this.errorLog.push(
+            [
+                hint,
+                errorNumberId,
+                this.errorNumberId[errorNumberId],
 
-        if(silent){
+            ]
+        )
+
+        if (silent) {
             //JUST DO NOTHING !!
-        }else{
+        } else {
             // GO AND DO NEXT STEP ( MAY STOP EXICUTION )
             return this.doNextStep(continiueProcess);
         }
     }
-    indexRun( name ){
+    indexRun(name) {
         this.process.actual_run.push(name)
     }
-    escMultiRun(filterName){
-        var runned = this.process.runned ;
-        return ( runned [runned.length - 2] === 'tarGetvalidation' ) ? true : false ;
+    escMultiRun(filterName) {
+        var runned = this.process.runned;
+        return (runned[runned.length - 2] === 'tarGetvalidation') ? true : false;
     }
-
-    // actual methods
-    update(){
+    update() {
+        this.indexRun("update")
         this.doNextStep();
     }
 }
