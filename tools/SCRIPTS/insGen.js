@@ -366,7 +366,7 @@ class insGen {
         
         // // indexing that we are running it :
         this.indexRun("update")
-        console.log(this.process.tarGets);
+        // console.log(this.process.tarGets);
         if(this.process.tarGets.length === 0){
 
             this.process.tarGets = [
@@ -395,11 +395,72 @@ class insGen {
             i = 0 // determiner for loop end
         ;
         try {
-            storage = require("./" + tarGetFileToWrite + ".json")
+            storage = require("./../../" + tarGetFileToWrite + ".json")
         } catch (error) {
             storage = {}
         }
-        
+        glob("tools/DBSET/**." + tarGetFileToWrite + ".json", (err, match) => {
+            // console.log(tarGetFileToWrite)
+            // inCase of error ( just distroy the process )
+            if (err) {
+                this.doNextStep(false);
+            } //signal to stop entire Process
+            
+            match.forEach(filePath => {
+
+                // if any math found just read it
+                fs.readFile(filePath, (err, content) => {
+
+                    // inCase of error ( just distroy the process )
+                    if (err) {
+                        this.doNextStep(false);
+                    } //signal to stop entire Process
+
+                    //if Sucess then start working
+                    var d = JSON.parse(content);
+                    // now add new json file content to our[ storage]
+                    // storage = Object.assign(storage, d.devDependencies)
+
+                    //--//uodate the storage ( ? || part) -------
+                    if (!param) {
+                        storage = Object.assign(storage, d)
+                    } else {
+                        param.forEach(currParma => {
+                            if (!storage[currParma]) {
+                                storage[currParma] = {};
+                            }
+                            Object.assign(
+                                storage[currParma],
+
+                                (typeof (d[currParma]) === 'undefined') ?
+                                {} : d[currParma]
+                                // d ['devDependencies']
+                            );
+                        });
+                    }
+
+                    //-------
+
+                    // also incrise our loop end indentifier ( so we can move to the conclution )
+                    i++;
+                    // wright the Genarated Json FIle to vl.json
+                    // wright to the file only happens if no error found during the entire oparation
+                    if (i >= match.length) {
+                        // pass data to wright to vl.json ( filePathIdentification - file )
+                        fs.writeFileSync(path.join(__dirname, "./../../" + tarGetFileToWrite + ".json"), JSON.stringify(storage));
+                        // console.log(updates);
+                        // console.log("fileCreate : url : " , path.join(__dirname  ,tarGetFileToWrite+".json"))
+                        // console.log(storage);
+                        // ;
+
+                        // now distroy the storage var
+                        storage = 0;
+                        // Pass Sucess Signal to Go for next Step
+                        this.doNextStep();
+                    }
+                });
+            });
+        });
 
 
         this.process.actual_run.push("updateJSON")

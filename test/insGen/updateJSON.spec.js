@@ -15,7 +15,7 @@ describe('updateJSON:', () => {
             var insGenResponce = new insGen("--update");
             
 
-            console.log( insGenResponce );
+            // console.log( insGenResponce );
 
             expect(insGenResponce.updateJSON_db.runned.length).to.equal(2)
         });
