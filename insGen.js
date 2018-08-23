@@ -18,6 +18,7 @@ class insGen {
         }
 
         //lists :
+        this.console = [] ;
         this.errorNumberId =[
             'undefined',
             'invalid',
@@ -46,7 +47,10 @@ class insGen {
         this.sudoAct = [
             'log'
         ];
-
+        this.inputs = {
+            "tarGets": [] ,
+                "filters": [] ,
+        }
         
         // run
         this.doNextStep();
@@ -61,6 +65,7 @@ class insGen {
 
             ){
             // log the error:
+            
             this.process.error = true ;
             //show output
             this.showOutput();
@@ -102,15 +107,14 @@ class insGen {
 
                 });
         } else {
-            // console.log(CurrentFilterName)
-            // console.log(typeof (this[CurrentFilterName]) === 'function')
+            
             if(!this.process.continue){
                 this.tarmination.tarminated = true ;
             }else if(typeof (this[CurrentFilterName]) !== 'function'){
                 this.tarmination.tarminated = true
                 this.tarmination.invalid = true
                 this.tarmination.reason = "undefined - filter"
-                this.error(CurrentFilterName , 0 , false , true )
+                this.error("invalid filter - " + CurrentFilterName , 1 , true , true )
             }else{
                 this.tarmination.sucess = true 
                 this.tarmination.reason = "sucess"
@@ -131,6 +135,7 @@ class insGen {
         // adding next 
         var args = this.args ;
 
+
         if(typeof ( args) === 'string'){
             // saparating cmnds
             var argsList = args.split(" ");
@@ -145,44 +150,52 @@ class insGen {
                 }else if(currentParamiter.length >= 2){
                     // error
                 }else {
+                    // add tarGetvalidation to the que
+                    this.process.filters.push('tarGetvalidation');
+                    // this.record.inputs.tarGets.push(currentParamiter.pop())
+                    // console.log(currentParamiter)
                     this.process.tarGets.push(currentParamiter.pop());
                 }
             });
 
         }
         
-        if(this.process.tarGets.length >=1){
-            this.process.filters.push('tarGetvalidation');
-        }
+        // if(this.process.tarGets.length >=1){
+        //     this.process.filters.push('tarGetvalidation');
+        // }
         // end
         this.doNextStep();
     }
     tarGetvalidation(){
         
-        //esc MultiRun
+        // //esc MultiRun
         if(this.escMultiRun('tarGetvalidation')){
             this.doNextStep();
             return false;
         }
-        // indexing that we are running it :
+        // // indexing that we are running it :
         this.indexRun('tarGetvalidation');
 
         var tarGets =  this.process.tarGets ;
-
+        this.inputs.tarGets = tarGets;
         //reset tareGets
         this.process.tarGets = [];
 
         var storage = [];
+        this.msg( tarGets)
         if (tarGets.length > 1) {
            
             for (let i = 0; i < tarGets.length; i++) {
                 var tarGet = false ;
                 const current_tarGet = tarGets[i];
+                
+                this.msg(current_tarGet  + ": current tarGet")
+
 
                 for (let l = 0; l < this.valid.tarGets.length; l++) {
                     const validTarGet = this.valid.tarGets[l];
                     if(current_tarGet === validTarGet ){
-                        // console.log(current_tarGet)
+                        
                         tarGet = true ;
                         storage.push(current_tarGet);
                         break ;
@@ -204,12 +217,19 @@ class insGen {
         //end
         this.doNextStep();
     }
+    msg(msg = ""){
+        this.console.push( 
+            // function Runned Last Time
+            this.process.actual_run[this.process.actual_run.length - 1],
+            msg
+        )
+    }
     error(hint , errorNumberId , continiueProcess = true , silent=false ){
 
         // 2018-08-22 23:37:16
         var errorMsg = [hint , errorNumberId , this.errorNumberId[errorNumberId]];
 
-        console.log(errorMsg , "-=> error:msg")
+        this.msg(errorMsg  + "-=> error:msg")
 
         this.errorLog.error.push([hint , errorNumberId , this.errorNumberId[errorNumberId]])    
 
@@ -226,6 +246,11 @@ class insGen {
     escMultiRun(filterName){
         var runned = this.process.runned ;
         return ( runned [runned.length - 2] === 'tarGetvalidation' ) ? true : false ;
+    }
+
+    // actual methods
+    update(){
+        this.doNextStep();
     }
 }
 
