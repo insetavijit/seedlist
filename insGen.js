@@ -4,7 +4,7 @@
 
 
 class insGen {
-    constructor(args = "", log = false) {
+    constructor(args = "", dev = false , methodNmae="", param = 0) {
         this.name = "insGen";
         this.args = args;
         //tmp vars :
@@ -50,9 +50,16 @@ class insGen {
             "tarGets": [],
             "filters": [],
         }
-
+        this.temp = [];
         // run
-        this.doNextStep();
+        this.isDevMode( dev, methodNmae,  param  );
+    }
+    isDevMode( dev, methodNmae,  param  ){
+        if(dev){
+            return this[methodNmae](param);
+        }else{
+            this.doNextStep();
+        }
     }
     arrayfilter(array =[]){
         var storage = [];
@@ -71,14 +78,18 @@ class insGen {
                 if(process === false){
                     storage.push(currentIndex);
                 }
+            }else{
+                this.temp = false ;
+                return false ;
             }
         }
+        this.temp = storage ;
         return storage ;
     }
     doNextStep(_continue = true) {
         //do not end process dircetly :
         // call error and pass the tarminat signal
-
+        
         var CurrentFilterName = this.process.filters[this.index.runProcesSerial + 1];
 
         if (_continue === false) {
@@ -89,16 +100,20 @@ class insGen {
 
             this.tarmination.reason = "stop-signal"
             this.showOutput();
-
-            this.index.runProcesSerial = 10000;
+            
             this.process.continue = false;
             this.tarmination.tarminated = true
             this.tarmination.sucess = false
+
         } else if (typeof (CurrentFilterName) === 'undefined') {
             // we reached the last point of the exicution 
             // so jsut doing a validation to confirm the oparation
 
-            var runned = Array ;
+            if(this.arrayfilter(this.process.runned).length === this.arrayfilter(this.process.actual_run).length)
+                {
+                    this.tarmination.sucess = true ;
+                }
+            this.showOutput();
         }
 
 
@@ -147,6 +162,7 @@ class insGen {
     }
     showOutput() {
         // console.log(this);
+        return this;
     }
     filterParams() {
         this.indexRun('filterParams');
