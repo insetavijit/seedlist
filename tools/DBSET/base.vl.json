@@ -2,7 +2,7 @@
     "base":{
         "bin":".bin/",
         "dist":"dist/",
-        "src":"src/",
+        "src":"ASSETS/",
         "libs":"dist/libs/"
     }
 }
