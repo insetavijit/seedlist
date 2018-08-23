@@ -1,0 +1,29 @@
+{
+  "name": "seedlist",
+  "main": "insGen.js",
+  "scripts": {
+    "test": "mocha ./test/**/**",
+    "start": "npm i && npm test && npm i"
+  },
+  "oseed": {
+    "author": "avijit sarkar <https://twitter.com/inset_>",
+    "license": "ISC",
+    "version": "1.0.0",
+    "description": "Collection of my Seed Projects -inset",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/insetavijit/seedlist.git"
+    },
+    "bugs": {
+      "url": "https://github.com/insetavijit/seedlist/issues"
+    },
+    "homepage": "https://github.com/insetavijit/seedlist#readme"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "glob": "^7.1.2",
+    "mocha": "^5.2.0",
+    "del": "^3.0.0"
+  },
+  "dependencies": {}
+}

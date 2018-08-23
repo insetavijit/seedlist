@@ -376,7 +376,7 @@ class insGen {
         }
         this.process.filters.push('updateJSON');
 
-        this.paramiters ['package'] = ['devDependencies', 'Dependencies'];
+        this.paramiters ['package'] = ['devDependencies', 'dependencies'];
 
         this.doNextStep();
     }

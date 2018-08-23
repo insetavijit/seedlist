@@ -1,5 +1,5 @@
 {
     "devDependencies": {
-        "hola":"chola"
+        "del": "^3.0.0"
     }
 }
