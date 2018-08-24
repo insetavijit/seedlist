@@ -37,7 +37,7 @@ gulp.task("debug:pug", gulp.parallel((done) => {
     pug(done, false);
 }));
 //we need to genarate all "HTML" files with respective name of theme and in folder ( for templateing purpose )
-gulp.task("pug:prod", gulp.parallel((done) => {
+gulp.task("pug:prod", gulp.parallel( 'debug:pug' ,(done) => {
     pug(done, false , true);
     pug(done, false, true, true);
 }));
@@ -112,7 +112,8 @@ function pug(done, isMinified = true, isProduction = false, isArcived = false) {
             // gulp.src("src/pug/ARCHIVE/.bin/*"),
             $.plumber(),
             $.pug(pugSettings),
-            gulp.src("src/pug/ARCHIVE/.bin/*"),
+            // adding the index file that we have already compiled
+            gulp.src(vl.pug.archiveProject.root + '.bin/*'),
             $.size(),
             gulp.dest(vl.base.dist)
         ], done());
