@@ -1,0 +1,49 @@
+//-
+    THIS FILE IS JUST THE INDEX FILE
+    DO NOT EDIT OR MODIFY IT .
+    JUST GO TO THE "./contents/" DIR AND CREATE A 
+    NEW PAGE THEN PUT ALL THE SCRIPT THEIR
+    AND THEN INCLUDE THAT PAGE TO "./contents/_index.pug"
+    FILE.
+    ALL WILL BE CONNECTED HERE .
+    ------------------------------------------------------
+    THIS INDEX FILE AND HOLE STRUCTURE IS FOR CREATEING 
+    JUST A SINGEL PAGE . AFTER YOU FINISH IT
+    THEN ARCHIVE IT AND AFTER THAT YOU CAN START EDITNG THIS
+    PROJECT TO CREATE ANOTHER PAGE ... REPETE
+
+    EVERY THING INSIDE ARCHIVE DIR ARE NOT GOING TO BE CONVERTED
+    IN DEV MODE 
+    IF YOU WANT TO GENARATE ALL PAGES THEN 
+    RUN THE GULP COMPILER WITH PRODUCTION MODE
+    SEE THE DOCUMENTRATION TO KNOW MORE .
+
+    CMNDS : gulp pug:dev ( runs in dev mode )
+    CMNDS : gulp pug:prod ( runs in productiion mode )
+    
+    TO KNOW ABOUT ABAILABLE CMNDS @SEE: "/DOCUMENTRATION/pug/intro.md" 
+
+    @SUPPORT : <https://twitter.com/inset_>
+    _______________________________________________________
+    CREATED ON : 2018-08-15 17:59:04
+    GMT+0530 (India Standard Time)
+    CREATED BY : AVIJIT SARKAR <https://twitter.com/inset_>
+    _______________________________________________________
+//-
+
+//- getting all the vars so every child pug templates got access to all the vars
+include ./vars/_index.pug
+
+//- starting the main html template
+<!DOCTYPE html>
+html(lang="en")
+    head
+        //- header Section :
+        include ./templates/part-header.pug
+    body
+    //- document templates
+
+    include ./templates/_index.pug
+
+    //- footer Section
+    include ./templates/part-footer.pug
