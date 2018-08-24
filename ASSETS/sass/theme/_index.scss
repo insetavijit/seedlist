@@ -1,0 +1,9 @@
+
+// this is the main theme config file
+@import "../cust/_vars";
+// genarating classes based on var ( for theme color and stuff)
+@import "themeConf";
+// all btns and btns related styles are here
+@import "btns";
+// extra util classes
+@import "utils";

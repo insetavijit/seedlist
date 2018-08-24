@@ -1,0 +1,9 @@
+{
+    "sass": {
+        "src": "ASSETS/sass/**/**.scss",
+        "prod": "ASSETS/sass/cust/**.scss",
+        "entryfile": "ASSETS/sass/index.scss",
+        "dist": "dist/libs/",
+        "prod_dist":"css-parts/"
+    }
+}

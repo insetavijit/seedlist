@@ -1,0 +1,31 @@
+.tst {
+    border: 1px solid red;
+}
+
+.hide {
+    display: none;
+}
+
+.show {
+    display: block;
+}
+
+ul.no-df,
+ul.inline {
+    margin: 0 !important;
+    padding: 0;
+    li {
+        list-style: none;
+    }
+}
+
+ul.inline {
+    display: flex;
+    flex-direction: unset;
+}
+
+.popups {
+    margin-top: 5px;
+    background: white;
+    border: 1px solid #e8e7e7;
+}
