@@ -1,0 +1,18 @@
+{
+    "pug": {
+        "src": "src/templates/ACTIVE/**/**.pug",
+        "entryfile": "src/templates/ACTIVE/index.pug",
+        "parts": {
+            "src": "src/templates/ACTIVE/contents**/**/**.pug"
+        },
+        "activeProject": {
+            "contents": "src/templates/ACTIVE/**/**",
+            "index": "src/templates/ACTIVE/index.pug"
+        },
+
+        "archiveProject": {
+            "contents": ["src/templates/ARCHIVE/**/contents/**.pug", "src/templates/ARCHIVE/**/index.pug"],
+            "bin": "src/templates/ARCHIVE/.bin"
+        }
+    }
+}
