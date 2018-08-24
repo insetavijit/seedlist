@@ -1,0 +1,10 @@
+{
+    "js": {
+        "entryfile": "ASSETS/jScripts/index.js",
+        "src": "ASSETS/jScripts/**/**.js",
+        "parts": {
+            "src": "ASSETS/jScripts/js-parts/**.js",
+            "dist":"ASSETS/libs/js-parts/"
+        }
+    }
+}
