@@ -8,7 +8,7 @@
 
 
 
-
+dist
 
 
 
@@ -19,7 +19,6 @@
 # else we can genarate it with insGen
 # it will be Created by AutoGen
 package.json
-
 
 package-lock.json
 

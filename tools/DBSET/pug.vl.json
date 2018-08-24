@@ -1,18 +1,18 @@
 {
     "pug": {
-        "src": "src/templates/ACTIVE/**/**.pug",
-        "entryfile": "src/templates/ACTIVE/index.pug",
+        "src": "ASSETS/pug/ACTIVE/**/**.pug",
+        "entryfile": "ASSETS/pug/ACTIVE/index.pug",
         "parts": {
-            "src": "src/templates/ACTIVE/contents**/**/**.pug"
+            "src": "ASSETS/pug/ACTIVE/templates**/**/**.pug"
         },
         "activeProject": {
-            "contents": "src/templates/ACTIVE/**/**",
-            "index": "src/templates/ACTIVE/index.pug"
+            "contents": "ASSETS/pug/ACTIVE/**/**",
+            "index": "ASSETS/pug/ACTIVE/index.pug"
         },
 
         "archiveProject": {
-            "contents": ["src/templates/ARCHIVE/**/contents/**.pug", "src/templates/ARCHIVE/**/index.pug"],
-            "bin": "src/templates/ARCHIVE/.bin"
+            "contents": ["ASSETS/pug/ARCHIVE/**/templates/**.pug", "ASSETS/pug/ARCHIVE/**/index.pug"],
+            "bin": "ASSETS/pug/ARCHIVE/.bin"
         }
     }
 }
