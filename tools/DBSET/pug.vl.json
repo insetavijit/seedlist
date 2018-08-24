@@ -11,6 +11,7 @@
         },
 
         "archiveProject": {
+            "root":"ASSETS/pug/ARCHIVE/",
             "contents": ["ASSETS/pug/ARCHIVE/**/templates/**.pug", "ASSETS/pug/ARCHIVE/**/index.pug"],
             "bin": "ASSETS/pug/ARCHIVE/.bin"
         }
