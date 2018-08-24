@@ -102,13 +102,15 @@ function js(done, minified = true , sourceMaps = false ,production = false ) {
         }
     };
 
-    console.log(vl.js.parts.dist , vl.base.libs)
+    // console.log(vl.js.parts.dist , vl.base.libs)
     // filter if its a  production build
     // var entryfile = (production) ? vl.js.parts.src : vl.js.entryfile ;
     // console.log(entryfile);
     pump([
         // gulp.src(vl.js.entryfile),
-        gulp.src((production === true && minified === false ) ? vl.js.parts.src : "ASSETS/jScripts/index.js" ),
+        gulp.src(
+            (production === true && minified === false ) 
+                ? vl.js.parts.src : vl.js.entryfile ),
         $.plumber(),
         // we have already genarated a config file ( based on the call )
         $.if(minified === true || sourceMaps === true ,webpack( conf ) ),
