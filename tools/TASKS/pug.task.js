@@ -181,13 +181,15 @@ function activeSet(done, param = [], called = 0) {
 function archiveProject(done) {
     var activeProject = db.project.active;
 
+    // 1 . move all contens from active project dir
     pump([
         // moving all contents
         gulp.src(vl.pug.activeProject.contents),
         $.size(),
-        gulp.dest(vl.base.archive + activeProject + '/')
+        gulp.dest(vl.pug.archiveProject.root + activeProject + '/')
     ]);
 
+    // 2. move the index file form active project dir
     pump([
         // moving the index file
         gulp.src(vl.pug.activeProject.index),
