@@ -1,0 +1,16 @@
+{
+    "conf_console_table_style": {
+        "border": {
+            "topBody": "─",
+    
+            "bottomBody": "─",
+    
+            "bodyLeft": "│",
+            "bodyRight": "│",
+            "bodyJoin": "│",
+    
+            "joinBody": " "
+        }
+    }
+
+}
