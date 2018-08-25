@@ -1,14 +1,12 @@
 
 
 
-
-
-
-
-
-
-
+#autoGens
 dist
+.bin
+# esc temp files:
+*.tmp.*
+*.temp.*
 
 
 
@@ -19,6 +17,7 @@ dist
 # else we can genarate it with insGen
 # it will be Created by AutoGen
 package.json
+
 
 package-lock.json
 
@@ -108,4 +107,5 @@ typings/
 .env
 
 # next.js build output
+.next
 .next
