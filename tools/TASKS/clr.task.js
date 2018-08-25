@@ -49,7 +49,7 @@ clrTaskList.forEach(clrItem => {
         chalk.yellow(chalk.bold("clr:" + clrItem)),
         chalk.magenta("Project Root /" + clrBlock[clrItem] + '/*')
     ])
-
+    // Creating tasks:
     gulp.task("clr:" + clrItem, gulp.parallel((done) => {
         clr(done, clrBlock[clrItem]);
     }))
@@ -64,6 +64,8 @@ gulp.task("clr:all", gulp.parallel((done) => {
     // clr(done, [vl.base.dist, vl.base.bin])
     clr(done, clrPaths)
 }));
+
+
 // wellcome msg : info : avout this task
 gulp.task("clr::", gulp.parallel((done) => {
 

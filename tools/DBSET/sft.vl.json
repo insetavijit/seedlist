@@ -1,7 +1,12 @@
 {
-    "sft": {
-        "libs": {
-
+    "sft":{
+        "libs":{
+            "js":"vl.json",
+            "css":"vl.json"
+        },
+        "mdc":{
+            "src":["vl.json" , "package.json"],
+            "dist":"dist"
         }
     }
 }
