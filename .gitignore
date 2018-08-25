@@ -1,14 +1,12 @@
 
 
 
-
-
-# esc temp files:
-
-*.tmp.*
-
-
+#autoGens
 dist
+.bin
+# esc temp files:
+*.tmp.*
+*.temp.*
 
 
 
