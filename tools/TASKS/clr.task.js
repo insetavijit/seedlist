@@ -3,27 +3,56 @@ const
 gulp = require ("gulp"),
 
 del = require("del"),
+chalk = require("chalk"),
 
-vl = require("../../vl.json"),
+table = require("table"),
+
+clrBlock = require("../../vl.json").clr,
 
 args = require("./MODULES/getCmnds.js")(process.argv.slice(2))
-
 ;
+
+
+//genaraing AutoCln tasks
+let clrTaskList = Object.keys(clrBlock) ;
+let clrPaths = [];
+
+// showTable : info
+let tasKtable = [];
+
+
+
+
+
+
+
+clrTaskList.forEach(clrItem => {
+    // addind paths to run clr:all
+    clrPaths.push(clrBlock [clrItem ]);
+    tasKtable.push([
+        chalk.default.yellow.bold( "clr:" + clrItem ),
+        chalk.default.cyan.italic(clrBlock[clrItem]),
+        chalk.default.magenta("remove all contents from" + clrItem )
+    ])
+    gulp.task("clr:" + clrItem, gulp.parallel((done)=>{
+        clr(done , clrBlock [clrItem ]);
+    }))
+});
+
 
 // clears ( remove content of ) all listed dirs with paramiters :
 gulp.task("clear",
     gulp.parallel(clr));
-// clears ( remove content of ) .bin dir
-gulp.task("clr:bin", gulp.parallel((done) => {
-    clr(done, [vl.base.bin])
-}));
-// clears ( remove content of ) dist dir
-gulp.task("clr:dist", gulp.parallel((done) => {
-    clr(done, [vl.base.dist])
-}));
+// info for the Task:
+gulp.task("clr::", gulp.parallel((done)=>{
+    console.log( tasKtable);
+
+    done();
+}))
 // clears ( remove content of ) all listed dirs ( see inside code )
 gulp.task("clr:all", gulp.parallel((done) => {
-    clr(done, [vl.base.dist, vl.base.bin])
+    // clr(done, [vl.base.dist, vl.base.bin])
+    clr(done , clrPaths)
 }));
 
 /**
@@ -37,6 +66,8 @@ function clr(done, dirListToClr = []) {
     if (dirListToClr.length === 0) {
         //NO PARAM IS FOUND : we will set -df global params as clr:param
         dirListToClr = args;
+    }else if (typeof (dirListToClr) === 'string' ){
+        dirListToClr = [dirListToClr]
     }
 
     // clearing the directorys
