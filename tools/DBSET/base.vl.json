@@ -3,6 +3,7 @@
         "bin":".bin/",
         "dist":"dist/",
         "src":"ASSETS/",
-        "libs":"dist/libs/"
+        "libs":"dist/libs/",
+        "vendor":"dist/libs/vendor/"
     }
 }

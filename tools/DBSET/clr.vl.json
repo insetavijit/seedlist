@@ -1,0 +1,6 @@
+{
+    "clr":{
+        "dist":"dist",
+        "bin":".bin"
+    }
+}
