@@ -1,14 +1,12 @@
 
 
 
-
-
-
-
-
-
-
+#autoGens
 dist
+.bin
+# esc temp files:
+*.tmp.*
+*.temp.*
 
 
 
@@ -109,4 +107,5 @@ typings/
 .env
 
 # next.js build output
+.next
 .next
