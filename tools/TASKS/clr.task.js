@@ -79,25 +79,23 @@ gulp.task("clr::", gulp.parallel((done) => {
     tasKtable.push([
         chalk.default.yellow.bold("clear"),
         chalk.default.magenta(
-            chalk.bgWhite(chalk.red(" gulp clear --dist ")) +
+            chalk.red(" gulp clear --dist ")+
             " is same as " +
-            chalk.bgWhite(chalk.red(" clr:dist "))
+            chalk.red(" clr:dist ")
         )
     ]);
 
     // render the view : wellcome msg
     console.log(
-        chalk.bgCyan(
-            chalk.black(
+            chalk.yellow(
                 table([
-                    ["TASK : clr || version 2.0"],
+                    [chalk.cyan("TASK : clr || version 2.0")],
                     ["`clr` task is created to remove contents form a specific dir"],
                     ["by df we have clr:bin and clr:dist but you can add more by"],
                     ["adding new dir paths to  `./tools/DBSET/clr.vl.json`"],
                     ["to clear any dir you can use " + chalk.red("`gulp clear --dirName`")]
                 ], tblStyleConf)
             )
-        )
     )
     // render the task list:
     console.log(chalk.bold("Currently abilable tasks :"))
