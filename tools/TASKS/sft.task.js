@@ -1,32 +1,69 @@
-
-
-
 const
+    //required items:
+    gulp = require("gulp"),
+    pump = require("pump"),
+    // config : info : fileLocations
+    vl = require("../../vl.json"),
+    sftBlock = vl.sft,
+    tblConfig = vl.conf_console_table_style,
+    //dispay
+    chalk = require("chalk").default,
+    table = require("table").table,
+    //vars
+    sftList = Object.keys(sftBlock);
 
-gulp = require("gulp"),
-
-vl = require("../../vl.json"),
-
-pump = require("pump"),
-
-sftBlock = vl.sft ,
-
-sftList = Object.keys(sftBlock)
-
-;
-
-var tskList = [] ;
-
+let tskList = [];
+let tskTable = [];
+let tskName = [];
 // genarating tasks for selective sft :
 // autoSft genarator
 for (let i = 0; i < sftList.length; i++) {
     const item = sftList[i];
-    tskList.push("sft:" + item );
-    gulp.task("sft:" + item , gulp.parallel((done) =>{
-        sft(done , sftBlock ,  item );
+    tskList.push("sft:" + item);
+    tskName.push(item);
+    // genataing tasks
+    gulp.task("sft:" + item, gulp.parallel((done) => {
+        sft(done, sftBlock, item);
     }))
 }
+gulp.task("sft::", gulp.parallel((done) => {
+    console.log(chalk.yellow(table([
+        [chalk.cyan("TASK NAME : sft || version 2.0")],
+        ["COPYING FILES FORM ONE DIR TO ANOTHER"],
+        ["config file is : ( ./tools/DBSET/sft.vl.json )"],
+        ["YOU CAN EASYLY ADD DIRS VIA GULP TO COPY"],
+        ["JUST ADD THE TASK NAME : COPY INFO"],
+        ["EXAMPLE : sft:{package:{src:[./pacakge.json] , dist:[dist]}}"],
+        ["@see the documentration for more info"],
+    ], tblConfig)))
 
+
+    console.log(chalk.bold("Currently abilable tasks :"))
+
+    //render the taks list
+    tskName.forEach(blockName => {
+        var tskN = "sft:" + blockName;
+        var block = sftBlock[blockName];
+        var childs = Object.keys(block);
+        childs.forEach(child => {
+            tskTable.push([
+                tskN,
+                "-=> " + child,
+                block[child]
+            ]);
+            tskN = " ";
+        });
+    });
+
+    // tskTable.push([
+    //     " ",
+    //     [2]
+    // ])
+
+
+    console.log(table(tskTable, tblConfig))
+    done();
+}))
 gulp.task("sft:all", gulp.parallel(tskList))
 
 /**
@@ -38,9 +75,9 @@ gulp.task("sft:all", gulp.parallel(tskList))
  * Created on :2018-08-25 20:18:17 ( GMT + 5:30 )
  * @author avijit sakrar <https://twitter.com/inset_>
  */
-function sft(done , sftSet , sftItemName ){
+function sft(done, sftSet, sftItemName) {
     var
-        tarGet = sftSet [ sftItemName ], // selecting the exact json block
+        tarGet = sftSet[sftItemName], // selecting the exact json block
         /**
          * THIS IS THE TRICK    :
          * if we do not have a src attribute in out sftBlock ( exmple : {sft:{libs:{js[]}}})
@@ -63,18 +100,26 @@ function sft(done , sftSet , sftItemName ){
          * can get those src name as the key 
          * but in yes_src case its just one src block
          */
-       //thats why we are importing only[src:1] | and all src's if no_Src block
-        tarGetSrc = (tarGet[ 'src']) ? ['src']: Object.keys( tarGet ) ;
-    ; // staring the actual loop
+        //thats why we are importing only[src:1] | and all src's if no_Src block
+        tarGetSrc = (tarGet['src']) ? ['src'] : Object.keys(tarGet);; // staring the actual loop
     tarGetSrc.forEach(sftEmelementRoot => {
         var
-            newSrc = tarGet [ sftEmelementRoot ] ; //explain: sft:libs[src] , sft:lolo[src]
-            // if no dist is spacified then set df dist == vendor dir
-            //else use the dir specified
-            newDist = ( tarGet['dist'] )? tarGet['dist']: [vl.base.vendor + sftEmelementRoot]
-        ;
+            newSrc = tarGet[sftEmelementRoot]; //explain: sft:libs[src] , sft:lolo[src]
+        // if no dist is spacified then set df dist == vendor dir
+        //else use the dir specified
+        newDist =
+            (tarGet['dist']) ? 
+                (typeof tarGet['dist'] === 'string')?
+                    [tarGet['dist']]
+                    :tarGet['dist'] 
+            : [vl.base.vendor + sftEmelementRoot];
         for (let i = 0; i < newDist.length; i++) {
             const dist = newDist[i];
+
+            console.log(chalk.green(table([
+                    [newSrc +" -=> " + dist ]
+                ], tblConfig)));
+
             pump([
                 gulp.src(newSrc), //sft:x:{ x === src }
                 gulp.dest(dist) //df : vl.base.vendor
