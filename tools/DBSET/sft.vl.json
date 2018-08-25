@@ -1,7 +1,7 @@
 {
-    "sft": {
-        "libs": {
-
+    "sft":{
+        "libs":{
+            "json":"vl.json"
         }
     }
 }
