@@ -49,7 +49,7 @@ gulp.task("sft::", gulp.parallel((done) => {
             tskTable.push([
                 tskN,
                 "-=> " + child,
-                block[child]
+                (typeof(block[child]) === "string" ) ? 1 : block[child].length
             ]);
             tskN = " ";
         });
