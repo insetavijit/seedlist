@@ -42,8 +42,8 @@ gulp.task("pug:prod", gulp.parallel( 'debug:pug' ,(done) => {
     pug(done, false, true, true);
 }));
 // run the compiler in watch mode
-gulp.task("pug:w", gulp.parallel('pug:dev', (done) => {
-    gulp.watch(vl.pug.src, gulp.parallel('pug:dev'))
+gulp.task("pug:w", gulp.parallel('debug:pug', (done) => {
+    gulp.watch(vl.pug.src, gulp.parallel('debug:pug'))
     done();
 }))
 
