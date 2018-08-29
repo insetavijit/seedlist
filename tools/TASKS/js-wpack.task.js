@@ -55,7 +55,10 @@ gulp.task("js:prod",gulp.parallel((done)=>{
 }));
 // RUN IN WATCH MODE
 gulp.task("js:w", gulp.parallel('debug:js', (done) => {
-    gulp.watch(vl.js.src, gulp.parallel(js(done)))
+    gulp.watch(vl.js.src, gulp.parallel((done)=>{
+        // only create the main js file
+        js(done , false );
+    }))
     done();
 }))
 
