@@ -64,7 +64,9 @@ gulp.task("sass:prod", gulp.parallel((done) => {
     sass(done, false, false, true);
 }));
 gulp.task("sass:w", gulp.parallel('sass:dev', (done) => {
-    gulp.watch(vl.sass.src, gulp.parallel('sass:dev'))
+    gulp.watch(vl.sass.src, gulp.parallel((done)=>{
+        sass(done , false );
+    }))
     done();
 }))
 
