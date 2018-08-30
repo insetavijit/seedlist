@@ -5,7 +5,7 @@
     "test": "mocha ./test/**/**",
     "start": "npm i && npm test && npm i"
   },
-  "oseed": {
+  "seedlist": {
     "author": "avijit sarkar <https://twitter.com/inset_>",
     "license": "ISC",
     "version": "1.0.0",
@@ -21,9 +21,10 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "chalk": "^2.4.1",
+    "del": "^3.0.0",
     "glob": "^7.1.2",
-    "mocha": "^5.2.0",
-    "del": "^3.0.0"
+    "mocha": "^5.2.0"
   },
   "dependencies": {}
 }
