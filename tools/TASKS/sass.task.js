@@ -35,7 +35,7 @@ const
  */
 // converts "sass" files to "CSS" files . in --minified mode.
 gulp.task("sass:dev", gulp.parallel((done) => {
-    sass(done);
+    sass(done , false);
 }));
 // converts "sass" files to "CSS" files . in --minified mode . with source maps
 gulp.task("debug:sass", gulp.parallel((done) => {
@@ -63,7 +63,7 @@ gulp.task("sass:prod", gulp.parallel((done) => {
     //3. genarate all css parts
     sass(done, false, false, true);
 }));
-gulp.task("sass:w", gulp.parallel('sass:dev', (done) => {
+gulp.task("sass:w", gulp.parallel('debug:sass', (done) => {
     gulp.watch(vl.sass.src, gulp.parallel((done)=>{
         sass(done , false );
     }))
