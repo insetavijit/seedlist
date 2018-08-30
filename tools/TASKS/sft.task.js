@@ -117,7 +117,7 @@ function sft(done, sftSet, sftItemName) {
             const dist = newDist[i];
 
             console.log(chalk.green(table([
-                    [newSrc +" -=> " + dist ]
+                    [newSrc.length +"entry : -=> " + dist ]
                 ], tblConfig)));
 
             pump([

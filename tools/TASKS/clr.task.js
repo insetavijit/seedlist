@@ -69,17 +69,17 @@ gulp.task("clr:all", gulp.parallel((done) => {
 // wellcome msg : info : avout this task
 gulp.task("clr::", gulp.parallel((done) => {
 
-    
+
     // installing custom task to the task table :
     tasKtable.push([
         chalk.default.yellow.bold("clr:all"),
-        chalk.default.magenta("runs -=> | " + tasksName)
+        chalk.default.magenta(tasksName)
     ]);
     // add custome task msg to the view
     tasKtable.push([
         chalk.default.yellow.bold("clear"),
         chalk.default.magenta(
-            chalk.red(" gulp clear --dist ")+
+            chalk.red(" gulp clear --dist ") +
             " is same as " +
             chalk.red(" clr:dist ")
         )
@@ -87,15 +87,15 @@ gulp.task("clr::", gulp.parallel((done) => {
 
     // render the view : wellcome msg
     console.log(
-            chalk.yellow(
-                table([
-                    [chalk.cyan("TASK : clr || version 2.0")],
-                    ["`clr` task is created to remove contents form a specific dir"],
-                    ["by df we have clr:bin and clr:dist but you can add more by"],
-                    ["adding new dir paths to  `./tools/DBSET/clr.vl.json`"],
-                    ["to clear any dir you can use " + chalk.red("`gulp clear --dirName`")]
-                ], tblStyleConf)
-            )
+        chalk.yellow(
+            table([
+                [chalk.cyan("TASK : clr || version 2.0")],
+                ["`clr` task is created to remove contents form a specific dir"],
+                ["by df we have clr:bin and clr:dist but you can add more by"],
+                ["adding new dir paths to  `./tools/DBSET/clr.vl.json`"],
+                ["to clear any dir you can use " + chalk.red("`gulp clear --dirName`")]
+            ], tblStyleConf)
+        )
     )
     // render the task list:
     console.log(chalk.bold("Currently abilable tasks :"))
@@ -119,6 +119,12 @@ function clr(done, dirListToClr = []) {
     }
     // clearing the directorys
     dirListToClr.forEach(clrDirs => {
+        console.log(chalk.red(table([
+            [
+                ["running -=> clr:bin"],
+                ["empty : " + clrDirs.split("/").pop()]
+            ]
+        ], tblStyleConf)))
         del(clrDirs + "/*");
     });
     // pass the complete signal
