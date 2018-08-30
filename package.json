@@ -5,7 +5,7 @@
     "test": "mocha ./test/**/**",
     "start": "npm i && npm test && npm i"
   },
-  "oseed": {
+  "seedlist": {
     "author": "avijit sarkar <https://twitter.com/inset_>",
     "license": "ISC",
     "version": "1.0.0",
@@ -16,10 +16,7 @@
     },
     "bugs": {
       "url": "https://github.com/insetavijit/seedlist/issues"
-    },
-    "chai": "^4.1.2",
-    "glob": "^7.1.2",
-    "mocha": "^5.2.0"
+    }
   },
   "dependencies": {},
   "devDependencies": {
@@ -33,6 +30,12 @@
     "pump": "^3.0.0",
     "del": "^3.0.0",
     "browser-sync": "^2.24.6",
-    "gulp-pug": "^4.0.1"
+    "gulp-pug": "^4.0.1",
+    "table": "^4.0.3",
+    "gulp-shell": "^0.6.5",
+    "chai": "^4.1.2",
+    "glob": "^7.1.2",
+    "mocha": "^5.2.0",
+    "chalk": "^2.4.1"
   }
 }
