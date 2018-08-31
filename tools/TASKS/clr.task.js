@@ -7,6 +7,9 @@
  * @description clear dir ( remove contnets form a dir || clr-=> dir/*)
  */
 
+
+//UPDATE :LIST
+// 2018-08-31 21:14:05
 const
     // required stuff
     gulp = require("gulp"),
@@ -16,7 +19,7 @@ const
     table = require("table").table,
     //fileStructure and configs
     clrBlock = require("../../vl.json").clr,
-    tblStyleConf = require("../../vl.json").conf_console_table_style,
+    tblConfig = require("../../vl.json").conf_console_table_style,
     // get the options paramiters
     args = require("./MODULES/getCmnds.js")(process.argv.slice(2));
 
@@ -94,12 +97,19 @@ gulp.task("clr::", gulp.parallel((done) => {
                 ["by df we have clr:bin and clr:dist but you can add more by"],
                 ["adding new dir paths to  `./tools/DBSET/clr.vl.json`"],
                 ["to clear any dir you can use " + chalk.red("`gulp clear --dirName`")]
-            ], tblStyleConf)
+            ], Object.assign(tblConfig , {'columnDefault' : {'width': 55}} ))
         )
     )
     // render the task list:
     console.log(chalk.bold("Currently abilable tasks :"))
-    console.log(table(tasKtable, tblStyleConf));
+
+    // reset the tblConfig : to df = none ;
+    tblConfig.columnDefault = {} ;
+    tblConfig['columns']= {};
+    tblConfig['columns'][1] =  {"width": 45};
+    
+
+    console.log(table(tasKtable, tblConfig));
     done();
 }))
 
@@ -124,7 +134,7 @@ function clr(done, dirListToClr = []) {
                 ["running -=> clr:bin"],
                 ["empty : " + clrDirs.split("/").pop()]
             ]
-        ], tblStyleConf)))
+        ], tblConfig)))
         del(clrDirs + "/*");
     });
     // pass the complete signal

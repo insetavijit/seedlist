@@ -35,8 +35,9 @@ gulp.task("sft::", gulp.parallel((done) => {
         ["JUST ADD THE TASK NAME : COPY INFO"],
         ["EXAMPLE : sft:{package:{src:[./pacakge.json] , dist:[dist]}}"],
         ["@see the documentration for more info"],
-    ], tblConfig)))
+    ], Object.assign(tblConfig , {'columnDefault' : {'width': 55}}) )))
 
+    
 
     console.log(chalk.bold("Currently abilable tasks :"))
 
@@ -47,21 +48,21 @@ gulp.task("sft::", gulp.parallel((done) => {
         var childs = Object.keys(block);
         childs.forEach(child => {
             tskTable.push([
-                tskN,
-                "-=> " + child,
-                (typeof(block[child]) === "string" ) ? 1 : block[child].length
+                chalk.yellow(tskN),
+                chalk.yellowBright("-=> " + child),
+                chalk.cyan(block[child])
             ]);
             tskN = " ";
         });
     });
 
-    // tskTable.push([
-    //     " ",
-    //     [2]
-    // ])
-
-
+    // reset the tblConfig : to df = none ;
+    tblConfig.columnDefault = {} ;
+    tblConfig['columns']= {};
+    tblConfig['columns'][2] =  {"width": 35};
+    
     console.log(table(tskTable, tblConfig))
+
     done();
 }))
 gulp.task("sft:all", gulp.parallel(tskList))
@@ -76,6 +77,7 @@ gulp.task("sft:all", gulp.parallel(tskList))
  * @author avijit sakrar <https://twitter.com/inset_>
  */
 function sft(done, sftSet, sftItemName) {
+    
     var
         tarGet = sftSet[sftItemName], // selecting the exact json block
         /**
@@ -108,17 +110,17 @@ function sft(done, sftSet, sftItemName) {
         // if no dist is spacified then set df dist == vendor dir
         //else use the dir specified
         newDist =
-            (tarGet['dist']) ? 
-                (typeof tarGet['dist'] === 'string')?
-                    [tarGet['dist']]
-                    :tarGet['dist'] 
-            : [vl.base.vendor + sftEmelementRoot];
+            (tarGet['dist']) ?
+            (typeof tarGet['dist'] === 'string') ? [tarGet['dist']] :
+            tarGet['dist'] :
+            [vl.base.vendor + sftEmelementRoot];
+        
         for (let i = 0; i < newDist.length; i++) {
             const dist = newDist[i];
 
             console.log(chalk.green(table([
-                    [newSrc.length +"entry : -=> " + dist ]
-                ], tblConfig)));
+                [newSrc.length + "entry : -=> " + dist]
+            ], tblConfig)));
 
             pump([
                 gulp.src(newSrc), //sft:x:{ x === src }
@@ -126,4 +128,7 @@ function sft(done, sftSet, sftItemName) {
             ], done())
         }
     });
+
+    
+
 }
